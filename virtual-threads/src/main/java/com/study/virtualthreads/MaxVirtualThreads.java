@@ -21,7 +21,8 @@ public class MaxVirtualThreads {
         int MAX_THREADS = 10;
         IntStream.rangeClosed(1, MAX_THREADS).
                 forEach(i -> {
-                    var threads = Thread.ofVirtual().start(() -> MaxVirtualThreads.doSomeWork(i));
+                    var threads = Thread.ofVirtual().start(
+                            () -> MaxVirtualThreads.doSomeWork(i));
                     atomicInteger.incrementAndGet();
                     log("No of threads:" + atomicInteger.get());
                 });
