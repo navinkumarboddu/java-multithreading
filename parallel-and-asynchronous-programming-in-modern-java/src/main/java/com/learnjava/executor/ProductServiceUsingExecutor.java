@@ -6,10 +6,14 @@ import com.learnjava.domain.Review;
 import com.learnjava.service.ProductInfoService;
 import com.learnjava.service.ReviewService;
 
+import java.util.concurrent.*;
+
 import static com.learnjava.util.CommonUtil.stopWatch;
 import static com.learnjava.util.LoggerUtil.log;
 
 public class ProductServiceUsingExecutor {
+
+    static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private ProductInfoService productInfoService;
     private ReviewService reviewService;
 
@@ -18,18 +22,22 @@ public class ProductServiceUsingExecutor {
         this.reviewService = reviewService;
     }
 
-    public Product retrieveProductDetails(String productId) {
+    public Product retrieveProductDetails(String productId) throws ExecutionException, InterruptedException, TimeoutException {
         stopWatch.start();
 
-        ProductInfo productInfo = productInfoService.retrieveProductInfo(productId); // blocking call
-        Review review = reviewService.retrieveReviews(productId); // blocking call
+        Future<ProductInfo> productInfoFuture = executorService.submit(() -> productInfoService.retrieveProductInfo(productId));
+        Future<Review> reviewFuture = executorService.submit(() -> reviewService.retrieveReviews(productId));
+
+        //ProductInfo productInfo = productInfoFuture.get();
+        ProductInfo productInfo = productInfoFuture.get(2, TimeUnit.SECONDS);
+        Review review = reviewFuture.get();
 
         stopWatch.stop();
         log("Total Time Taken : "+ stopWatch.getTime());
         return new Product(productId, productInfo, review);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
 
         ProductInfoService productInfoService = new ProductInfoService();
         ReviewService reviewService = new ReviewService();
@@ -37,6 +45,6 @@ public class ProductServiceUsingExecutor {
         String productId = "ABC123";
         Product product = productService.retrieveProductDetails(productId);
         log("Product is " + product);
-
+        executorService.shutdown();
     }
 }
