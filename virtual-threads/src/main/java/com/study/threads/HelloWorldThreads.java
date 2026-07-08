@@ -14,17 +14,17 @@ public class HelloWorldThreads {
 
     private static void world(){
         sleep(600);
-        result = result.concat("World");
+        result = result.concat(" World");
     }
 
     public static void main(String[] args) throws InterruptedException {
-        Thread t1 = Thread.ofPlatform().start(HelloWorldThreads::hello);
-        Thread t2 = Thread.ofPlatform().start(HelloWorldThreads::world);
+        var t1 = Thread.ofPlatform().start(HelloWorldThreads::hello);
+        var t2 = Thread.ofPlatform().start(HelloWorldThreads::world);
 
         //join
         t1.join();
         t2.join();
 
-        log("Result is :" + result);
+        log("Result is : " + result);
     }
 }

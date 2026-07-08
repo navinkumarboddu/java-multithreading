@@ -18,6 +18,9 @@ public class MaxVirtualThreads {
     }
 
     public static void main(String[] args) {
+        var noOfCores = CommonUtil.noOfCores();
+        System.out.println("noOfCores: " + noOfCores);
+
         int MAX_THREADS = 10;
         IntStream.rangeClosed(1, MAX_THREADS).
                 forEach(i -> {

@@ -16,12 +16,18 @@ public class ExploreThreads {
         var thread1 = Thread.ofPlatform().name("t1");
         var thread2 = Thread.ofPlatform().name("t2");
 
+        var thread3 = Thread.ofPlatform().name("t3")
+                        .unstarted(() -> {
+                            log("Run task 3 in the background");
+                        });
+
         thread1.start(() ->{
            log("Running Thread 1 in background...");
         });
 
         thread2.start(ExploreThreads::doSomeWork);
 
+        thread3.start();
         log("Program completed");
 
         /*Java 8

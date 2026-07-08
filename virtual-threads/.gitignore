@@ -5,8 +5,11 @@
 /mavenHomeManager.xml
 .class
 
-# Compiled files
+# Ignore compiled Java class files
 *.class
+
+# Build directories
+target/
 
 # Build directories
 /target/
