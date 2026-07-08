@@ -1,7 +1,7 @@
-package future;
+package com.study.future;
 
 
-import com.study.future.ProductServiceUsingExecutor;
+import com.study.future.ProductServiceUsingExecutorVirtualThreads;
 import com.study.service.ProductInfoService;
 import com.study.service.ReviewService;
 import org.junit.jupiter.api.Assertions;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-class ProductServiceUsingExecutorTest {
+class ProductServiceUsingExecutorVirtualthreadsTest {
 
     @Spy
     ProductInfoService productInfoService;
@@ -30,19 +30,19 @@ class ProductServiceUsingExecutorTest {
     ReviewService reviewService;
 
     @InjectMocks
-    ProductServiceUsingExecutor productServiceUsingExecutor;
+    ProductServiceUsingExecutorVirtualThreads productServiceUsingExecutorVirtualThreads;
 
 
     @Test
     void retrieveProductDetails() throws ExecutionException, InterruptedException, TimeoutException {
-        var product = productServiceUsingExecutor.retrieveProductDetails("ABC");
+        var product = productServiceUsingExecutorVirtualThreads.retrieveProductDetails("ABC");
         assertNotNull(product);
     }
 
     @Test
     void retrieveProductDetailsException() throws InterruptedException {
         when(productInfoService.retrieveProductInfo(anyString())).thenThrow(new RuntimeException("Exception Occurred"));
-        var exception = Assertions.assertThrows(ExecutionException.class, () -> productServiceUsingExecutor.retrieveProductDetails("ABC"));
+        var exception = Assertions.assertThrows(ExecutionException.class, () -> productServiceUsingExecutorVirtualThreads.retrieveProductDetails("ABC"));
         assertEquals("java.lang.RuntimeException: Exception Occurred", exception.getMessage());
 
         Thread.sleep(2000);
